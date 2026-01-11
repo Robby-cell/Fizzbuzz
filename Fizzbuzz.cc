@@ -44,24 +44,23 @@ struct BaseRule : BasicRule {
 };
 
 template <typename... Rules> struct FizzbuzzProgram {
-  static_assert((std::is_base_of_v<BasicRule, Rules> or ...), "Must be rules");
+  static_assert((std::is_base_of_v<BasicRule, Rules> and ...), "Must be rules");
 
   static constexpr std::tuple<Rules...> rules{};
 
-  static void Run(unsigned limit) {
+  void Run(unsigned limit) {
     for (unsigned i = 1; i <= limit; ++i) {
       ExecuteRules(i);
     }
   }
 
-  static void ExecuteRules(unsigned number) {
+  void ExecuteRules(unsigned number) {
     ExecuteRuleImpl(number, std::make_integer_sequence<
                                 size_t, std::tuple_size_v<decltype(rules)>>{});
   }
 
   template <size_t... Idx>
-  static void ExecuteRuleImpl(unsigned number,
-                              std::integer_sequence<size_t, Idx...>) {
+  void ExecuteRuleImpl(unsigned number, std::integer_sequence<size_t, Idx...>) {
     [[maybe_unused]] const auto executed =
         ((std::get<Idx>(rules).Execute(number)) or ...);
   }
