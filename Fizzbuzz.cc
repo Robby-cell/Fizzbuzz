@@ -46,7 +46,7 @@ struct BaseRule : BasicRule {
 template <typename... Rules> struct FizzbuzzProgram {
   static_assert((std::is_base_of_v<BasicRule, Rules> and ...), "Must be rules");
 
-  static constexpr std::tuple<Rules...> rules{};
+  std::tuple<Rules...> rules{};
 
   void Run(unsigned limit) {
     for (unsigned i = 1; i <= limit; ++i) {
